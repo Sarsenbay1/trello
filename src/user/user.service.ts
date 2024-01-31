@@ -16,32 +16,41 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    // console.log('___________________\n');
-    // try {
-    //   user.password = createUserDto.password;
-    //   user.email = createUserDto.email;
-    // } catch (error) {
-    //   console.log(error);
-    // }
     const { email, password } = createUserDto;
     const user = await this.userRepository.create({ email, password });
-    // console.log(email, password, createUserDto);
     return await this.userRepository.save(user);
   }
 
   async findOne(id: number): Promise<User | undefined> {
     const user = await this.userRepository.findOneBy({ id: id });
+    console.log(user);
     return user;
   }
 
   async signIn(id: number, email: string, pass: string): Promise<any> {
-    const user = await this.findOne(id);
-    if (user?.password !== pass) {
-      throw new UnauthorizedException();
+    try {
+      const user = await this.findOne(id);
+      if (user?.password !== pass) {
+        throw new UnauthorizedException();
+      }
+      const payload = { sub: user.id, email: user.email };
+      return {
+        MediaKeySystemAccess_token: await this.jwtService.signAsync(payload),
+      };
+    } catch (error) {
+      console.log(error);
     }
-    const payload = { sub: user.id, email: user.email };
-    return {
-      MediaKeySystemAccess_token: await this.jwtService.signAsync(payload),
-    };
+  }
+
+  async deleteUser(id: number): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id: id });
+    return await this.userRepository.remove(user);
+  }
+  async updateUser(updateUserDto: UpdateUserDto, id: number): Promise<any> {
+    const { email, password } = updateUserDto;
+    const user = await this.userRepository.findOneBy({ id: id });
+    user.email = email;
+    user.password = password;
+    return await this.userRepository.save(user);
   }
 }

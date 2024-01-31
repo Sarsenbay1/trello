@@ -5,11 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
-import { ColumnModule } from './column/column.module';
-import { CardModule } from './card/card.module';
 import { DataSource } from 'typeorm';
-
-import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -25,9 +21,6 @@ import { CommentModule } from './comment/comment.module';
       synchronize: true,
     }),
     UserModule,
-    ColumnModule,
-    CardModule,
-    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -35,4 +28,4 @@ import { CommentModule } from './comment/comment.module';
 export class AppModule {
   constructor(private dataSource: DataSource) {}
 }
-console.log(`DB work PORT ${process.env.POSTGRES_PORT}`);
+console.log(`DB work to PORT ${process.env.POSTGRES_PORT}`);
