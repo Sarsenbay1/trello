@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Put,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -42,7 +43,7 @@ export class UserController {
   }
 
   @UseGuards(UserGuard)
-  @Put(':id')
+  @Patch(':id')
   updateUser(@Param(':id') id: number, @Body() signInDto: UpdateUserDto) {
     return this.userService.updateUser(signInDto, id);
   }

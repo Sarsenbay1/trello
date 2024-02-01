@@ -1,34 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { UserGuard } from 'src/user/user.guard';
 
-@Controller('card')
+@Controller('user/:userId/column/:columnId/card')
 export class CardController {
   constructor(private readonly cardService: CardService) {}
-
+  @UseGuards(UserGuard)
   @Post()
-  create(@Body() createCardDto: CreateCardDto) {
-    return this.cardService.create(createCardDto);
+  createCard(
+    @Body() createCardDto: CreateCardDto,
+    @Param('colomnId') columnId: number,
+  ) {
+    return this.cardService.createCard(createCardDto, columnId);
   }
 
   @Get()
-  findAll() {
-    return this.cardService.findAll();
+  findAllCards(@Param('columnId') columnId: number) {
+    return this.cardService.findAllCards(columnId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cardService.findOne(+id);
+  findOneCard(@Param('id') id: string) {
+    return this.cardService.findOneCard(+id);
   }
-
+  @UseGuards(UserGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
-    return this.cardService.update(+id, updateCardDto);
+  updateCard(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
+    return this.cardService.updateCard(+id, updateCardDto);
   }
-
+  @UseGuards(UserGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cardService.remove(+id);
+  removeCard(@Param('id') id: string) {
+    return this.cardService.removeCard(+id);
   }
 }

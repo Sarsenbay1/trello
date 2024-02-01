@@ -3,7 +3,6 @@ import { Comment } from 'src/comment/entities/comment.entity';
 import {
   Column,
   Entity,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -14,7 +13,7 @@ export class Card {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @ManyToOne(() => ColumnEntity, (column) => column.cards)
