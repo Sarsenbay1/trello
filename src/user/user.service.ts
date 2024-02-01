@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class UserService {
   constructor(
-    // private usersService: UserService,
     private jwtService: JwtService,
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -42,15 +41,16 @@ export class UserService {
     }
   }
 
-  async deleteUser(id: number): Promise<User> {
-    const user = await this.userRepository.findOneBy({ id: id });
-    return await this.userRepository.remove(user);
-  }
   async updateUser(updateUserDto: UpdateUserDto, id: number): Promise<any> {
     const { email, password } = updateUserDto;
     const user = await this.userRepository.findOneBy({ id: id });
     user.email = email;
     user.password = password;
     return await this.userRepository.save(user);
+  }
+
+  async deleteUser(id: number): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id: id });
+    return await this.userRepository.remove(user);
   }
 }

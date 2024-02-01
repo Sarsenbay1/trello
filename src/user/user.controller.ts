@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -16,7 +15,7 @@ import { UserGuard } from './user.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(readonly userService: UserService) {}
 
   @Post('login')
   signIn(@Body() signInDto: Record<string, any>) {
@@ -47,4 +46,5 @@ export class UserController {
   updateUser(@Param(':id') id: number, @Body() signInDto: UpdateUserDto) {
     return this.userService.updateUser(signInDto, id);
   }
+  // Columns
 }

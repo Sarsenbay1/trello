@@ -1,5 +1,6 @@
 import { Length } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ColumnEntity } from 'src/column/entities/column.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -12,4 +13,7 @@ export class User {
   @Length(6, 302)
   @Column()
   password: string;
+
+  @OneToMany(() => ColumnEntity, (column) => column.user)
+  columns: ColumnEntity[];
 }

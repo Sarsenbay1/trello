@@ -7,6 +7,13 @@ import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
 import { DataSource } from 'typeorm';
 
+import { ColumnModule } from './column/column.module';
+import { CardModule } from './card/card.module';
+import { CommentModule } from './comment/comment.module';
+import { ColumnEntity } from './column/entities/column.entity';
+import { Card } from './card/entities/card.entity';
+import { Comment } from './comment/entities/comment.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
@@ -17,13 +24,16 @@ import { DataSource } from 'typeorm';
       username: process.env.POSTGRES_USER,
       database: process.env.POSTGRES_DB,
       password: process.env.POSTGRES_PASSWORD,
-      entities: [User],
+      entities: [User, ColumnEntity, Card, Comment],
       synchronize: true,
     }),
     UserModule,
+    ColumnModule,
+    CardModule,
+    CommentModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UserModule],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}
