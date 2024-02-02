@@ -5,6 +5,8 @@ Goal 🎯
 
 
 1)Create a RESTful API with authorization for trello (trello.com ) on net js (https://docs.nestjs.com /).
+
+
 2)To design the database structure using https://dbdiagram.io
 
 ![image](https://github.com/Sarsenbaev1/trello/assets/124807755/c8532f21-0d6f-4626-8ac9-3f5698a31ad6)
