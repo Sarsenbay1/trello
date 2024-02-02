@@ -1,0 +1,22 @@
+version: '3.8'
+
+networks:
+  trello:
+    name: trello
+
+services:
+  postgres:
+    image: postgres:13.1
+    container_name: trello
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - trello
+    volumes:
+      - ../runtime/postgres:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:5432
