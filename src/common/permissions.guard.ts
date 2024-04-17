@@ -87,7 +87,7 @@ export class PermissionsGuard implements CanActivate {
     const pathList = path.replace('/', '').split('/');
     console.log(pathList.length);
     console.log(pathList);
-    for (let i = 2; i < pathList.length; i = i + 2) {
+    for (let i = 2; i < pathList.length - 1; i = i + 2) {
       try {
         if (!this.isAvailable(pathList[i], +pathList[i + 1], userId)) {
           return false;
