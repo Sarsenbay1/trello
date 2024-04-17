@@ -49,6 +49,9 @@ export class PermissionsGuard implements CanActivate {
     ) {
       return true;
     }
+    throw new ForbiddenException(
+      'You do not have sufficient access rights to this resource',
+    );
   }
 
   private getRepository(entityType: string): Repository<any> {
@@ -80,7 +83,7 @@ export class PermissionsGuard implements CanActivate {
       return true;
     }
 
-    throw new ForbiddenException();
+    return false;
   }
 
   private pathAffiliation(path: string, userId: number) {
