@@ -16,6 +16,7 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { CreateColumnRto } from './rto/create-column.rto';
 import { ColumnRto } from './rto/column.rto';
 import { DeleteColumnRto } from './rto/delete-column.rto';
+import { PermissionsGuard } from 'src/common/permissions.guard';
 
 @Controller('user/:userId/column')
 export class ColumnController {
@@ -26,9 +27,9 @@ export class ColumnController {
     type: CreateColumnRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Post()
-  create(
+  createColumn(
     @Body() createColumnDto: CreateColumnDto,
     @Param('userId') userId: number,
   ) {
@@ -49,6 +50,7 @@ export class ColumnController {
     type: ColumnRto,
     isArray: false,
   })
+  @UseGuards(PermissionsGuard)
   @Get(':id')
   findOneColumn(@Param('id') id: number) {
     return this.columnService.findOneColumn(id);
@@ -59,9 +61,12 @@ export class ColumnController {
     type: ColumnRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateColumnDto: UpdateColumnDto) {
+  updateColumn(
+    @Param('id') id: number,
+    @Body() updateColumnDto: UpdateColumnDto,
+  ) {
     return this.columnService.updateColumn(id, updateColumnDto);
   }
 
@@ -70,7 +75,7 @@ export class ColumnController {
     type: DeleteColumnRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Delete(':id')
   removeColumn(@Param('id') id: number) {
     return this.columnService.removeColumn(id);

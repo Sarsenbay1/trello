@@ -16,6 +16,7 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { CreateCommentRto } from './rto/create-comment.rto';
 import { CommentRto } from './rto/comment.rto';
 import { DeleteCommentRto } from './rto/delete-comment.dto';
+import { PermissionsGuard } from 'src/common/permissions.guard';
 
 @Controller('user/:userId/column/:columnId/card/:cardId/comment')
 export class CommentController {
@@ -26,7 +27,7 @@ export class CommentController {
     type: CreateCommentRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Post()
   createComment(
     @Body() createCommentDto: CreateCommentDto,

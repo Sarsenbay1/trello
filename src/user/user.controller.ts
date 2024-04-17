@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Patch,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +18,7 @@ import { UserLoginRto } from './rto/user-login.rto';
 import { UserRto } from './rto/user.rto';
 import { DeleteUserRto } from './rto/delete-user.rto';
 import { UpdateUserRto } from './rto/update-user.rto';
+import { PermissionsGuard } from 'src/common/permissions.guard';
 
 @Controller('user')
 export class UserController {
@@ -28,11 +30,7 @@ export class UserController {
   })
   @Post('login')
   signIn(@Body() signInDto: Record<string, any>) {
-    return this.userService.signIn(
-      signInDto.id,
-      signInDto.email,
-      signInDto.password,
-    );
+    return this.userService.signIn(signInDto.email, signInDto.password);
   }
   @ApiOkResponse({
     description: 'Create user',
@@ -58,9 +56,9 @@ export class UserController {
     type: DeleteUserRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Delete(':id')
-  deleteUser(@Param(':id') id: number) {
+  deleteUser(@Param('id') id: number) {
     return this.userService.deleteUser(id);
   }
 
@@ -69,9 +67,9 @@ export class UserController {
     type: UpdateUserRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Patch(':id')
-  updateUser(@Param(':id') id: number, @Body() signInDto: UpdateUserDto) {
+  updateUser(@Param('id') id: number, @Body() signInDto: UpdateUserDto) {
     return this.userService.updateUser(signInDto, id);
   }
 }

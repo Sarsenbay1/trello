@@ -16,6 +16,7 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { CreateCardRto } from './rto/create-card.rto';
 import { CardRto } from './rto/card.rto';
 import { DeleteCardRto } from './rto/delete-card.rto';
+import { PermissionsGuard } from 'src/common/permissions.guard';
 
 @Controller('user/:userId/column/:columnId/card')
 export class CardController {
@@ -26,7 +27,7 @@ export class CardController {
     type: CreateCardRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Post()
   createCard(
     @Body() createCardDto: CreateCardDto,
@@ -58,7 +59,7 @@ export class CardController {
     type: CardRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Patch(':id')
   updateCard(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
     return this.cardService.updateCard(+id, updateCardDto);
@@ -69,7 +70,7 @@ export class CardController {
     type: DeleteCardRto,
     isArray: false,
   })
-  @UseGuards(UserGuard)
+  @UseGuards(UserGuard, PermissionsGuard)
   @Delete(':id')
   removeCard(@Param('id') id: string) {
     return this.cardService.removeCard(+id);
