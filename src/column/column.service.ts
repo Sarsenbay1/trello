@@ -32,7 +32,9 @@ export class ColumnService {
 
   async findOneColumn(id: number) {
     const column = await this.columnRepository.findOneBy({ id: id });
-    return column;
+    if (column) {
+      return column;
+    }
   }
 
   async updateColumn(id: number, updateColumnDto: UpdateColumnDto) {
@@ -43,6 +45,10 @@ export class ColumnService {
   }
 
   async removeColumn(id: number) {
+    const user = await this.columnRepository.find({
+      where: { id: id },
+    });
+    console.log(user, '====================');
     const column = await this.columnRepository.findOneBy({ id: id });
     return await this.columnRepository.remove(column);
   }

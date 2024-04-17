@@ -1,5 +1,6 @@
 import { ColumnEntity } from 'src/column/entities/column.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
@@ -21,4 +22,7 @@ export class Card {
 
   @OneToMany(() => Comment, (comment) => comment.card)
   comments: Comment[];
+
+  @ManyToOne(() => User, (user) => user.cards)
+  user: User;
 }
