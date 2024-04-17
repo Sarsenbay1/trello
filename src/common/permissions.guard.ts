@@ -41,17 +41,17 @@ export class PermissionsGuard implements CanActivate {
 
     let path = request.path;
     console.log(path);
-
+    console.log(userIdFromJwt == userIdFromUrl);
     // for()
+    if (!request.params.userId && userIdFromJwt == userIdFromUrl) {
+      return true;
+    }
     if (
       userIdFromJwt == userIdFromUrl &&
       this.pathAffiliation(path, userIdFromJwt)
     ) {
       return true;
     }
-    throw new ForbiddenException(
-      'You do not have sufficient access rights to this resource',
-    );
   }
 
   private getRepository(entityType: string): Repository<any> {
@@ -83,16 +83,16 @@ export class PermissionsGuard implements CanActivate {
       return true;
     }
 
-    return false;
+    // return false;
   }
 
-  private pathAffiliation(path: string, userId: number) {
+  private async pathAffiliation(path: string, userId: number) {
     const pathList = path.replace('/', '').split('/');
     console.log(pathList.length);
     console.log(pathList);
     for (let i = 2; i < pathList.length - 1; i = i + 2) {
       try {
-        if (!this.isAvailable(pathList[i], +pathList[i + 1], userId)) {
+        if (!(await this.isAvailable(pathList[i], +pathList[i + 1], userId))) {
           return false;
         }
       } catch (err) {}
