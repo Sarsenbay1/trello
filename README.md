@@ -9,7 +9,8 @@ Goal 🎯
 
 2)To design the database structure using https://dbdiagram.io
 
-![image](https://github.com/Sarsenbaev1/trello/assets/124807755/c8532f21-0d6f-4626-8ac9-3f5698a31ad6)
+![image](https://github.com/Sarsenbay1/trello/assets/124807755/841f7f4c-6544-47bf-90d9-d650a99818e5)
+
 
 ```bash
 $ npm run docker:up_win postgres
