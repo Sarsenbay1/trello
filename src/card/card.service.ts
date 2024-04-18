@@ -15,9 +15,9 @@ export class CardService {
     private columnRepository: Repository<ColumnEntity>,
   ) {}
 
-  async createCard(createCardDto: CreateCardDto, colomnId: number) {
+  async createCard(createCardDto: CreateCardDto, columnId: number) {
     const { name } = createCardDto;
-    const column = await this.columnRepository.findOneBy({ id: colomnId });
+    const column = await this.columnRepository.findOneBy({ id: columnId });
     if (column) {
       const card = await this.cardRepository.create({ name, column });
       return await this.cardRepository.save(card);

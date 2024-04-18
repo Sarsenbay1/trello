@@ -1,9 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +6,7 @@ import { Card } from 'src/card/entities/card.entity';
 import { ColumnEntity } from 'src/column/entities/column.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { User } from 'src/user/entities/user.entity';
-import { QueryFailedError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -40,15 +35,21 @@ export class PermissionsGuard implements CanActivate {
       : request.params.id;
 
     let path = request.path;
-    console.log(path);
-    console.log(userIdFromJwt == userIdFromUrl);
-    // for()
+
     if (!request.params.userId && userIdFromJwt == userIdFromUrl) {
       return true;
     }
     if (
+      request.params.userId &&
+      !request.params.columnId &&
+      !request.params.id &&
+      userIdFromJwt == userIdFromUrl
+    ) {
+      return true;
+    }
+    if (
       userIdFromJwt == userIdFromUrl &&
-      this.pathAffiliation(path, userIdFromJwt)
+      (await this.pathAffiliation(path, userIdFromJwt))
     ) {
       return true;
     }
@@ -79,24 +80,24 @@ export class PermissionsGuard implements CanActivate {
       id: entity.user.id,
     });
 
-    if (userId == authorEntity.id) {
-      return true;
-    }
-
-    // return false;
+    return userId == authorEntity.id;
   }
 
   private async pathAffiliation(path: string, userId: number) {
-    const pathList = path.replace('/', '').split('/');
+    let pathList = path.replace('/', '').split('/');
     console.log(pathList.length);
     console.log(pathList);
-    for (let i = 2; i < pathList.length - 1; i = i + 2) {
-      try {
-        if (!(await this.isAvailable(pathList[i], +pathList[i + 1], userId))) {
-          return false;
-        }
-      } catch (err) {}
-      return true;
+    if (path.length % 2 != 0) {
+      pathList.pop();
     }
+
+    for (let i = 2; i < pathList.length; i += 2) {
+      console.log(pathList[i], +pathList[i + 1], userId);
+
+      if (!(await this.isAvailable(pathList[i], +pathList[i + 1], userId))) {
+        return false;
+      }
+    }
+    return true;
   }
 }

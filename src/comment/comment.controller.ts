@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -31,7 +32,7 @@ export class CommentController {
   @Post()
   createComment(
     @Body() createCommentDto: CreateCommentDto,
-    @Param('cardId') cardId: number,
+    @Param('cardId', ParseIntPipe) cardId: number,
   ) {
     return this.commentService.createComment(createCommentDto, cardId);
   }
@@ -42,7 +43,7 @@ export class CommentController {
     isArray: true,
   })
   @Get()
-  findAllComments(@Param('cardId') cardId: number) {
+  findAllComments(@Param('cardId', ParseIntPipe) cardId: number) {
     return this.commentService.findAllComment(cardId);
   }
   @ApiOkResponse({
@@ -51,7 +52,7 @@ export class CommentController {
     isArray: false,
   })
   @Get(':id')
-  findOneComment(@Param('id') id: string) {
+  findOneComment(@Param('id', ParseIntPipe) id: string) {
     return this.commentService.findOneComment(+id);
   }
 
@@ -63,7 +64,7 @@ export class CommentController {
   @UseGuards(UserGuard)
   @Patch(':id')
   updateComment(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: string,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
     return this.commentService.updateComment(+id, updateCommentDto);
@@ -76,7 +77,7 @@ export class CommentController {
   })
   @UseGuards(UserGuard)
   @Delete(':id')
-  removeComment(@Param('id') id: string) {
+  removeComment(@Param('id', ParseIntPipe) id: string) {
     return this.commentService.removeComment(+id);
   }
 }
