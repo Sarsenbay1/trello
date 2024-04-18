@@ -19,8 +19,8 @@ export class ColumnService {
     const { title } = createColumnDto;
     const user = await this.userRepository.findOneBy({ id: userId });
     if (user) {
-      const column = await this.columnRepository.create({ title, user });
-      return await this.columnRepository.save(column);
+      const column = this.columnRepository.create({ title, user });
+      return this.columnRepository.save(column);
     }
   }
 
@@ -45,10 +45,6 @@ export class ColumnService {
   }
 
   async removeColumn(id: number) {
-    const user = await this.columnRepository.find({
-      where: { id: id },
-    });
-    console.log(user, '====================');
     const column = await this.columnRepository.findOneBy({ id: id });
     return await this.columnRepository.remove(column);
   }

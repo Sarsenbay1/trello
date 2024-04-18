@@ -7,7 +7,7 @@ import {
   Delete,
   UseGuards,
   Patch,
-  ForbiddenException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -47,7 +47,7 @@ export class UserController {
     isArray: false,
   })
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
@@ -58,7 +58,7 @@ export class UserController {
   })
   @UseGuards(UserGuard, PermissionsGuard)
   @Delete(':id')
-  deleteUser(@Param('id') id: number) {
+  deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.deleteUser(id);
   }
 
@@ -69,7 +69,10 @@ export class UserController {
   })
   @UseGuards(UserGuard, PermissionsGuard)
   @Patch(':id')
-  updateUser(@Param('id') id: number, @Body() signInDto: UpdateUserDto) {
+  updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() signInDto: UpdateUserDto,
+  ) {
     return this.userService.updateUser(signInDto, id);
   }
 }

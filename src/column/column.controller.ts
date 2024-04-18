@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ColumnService } from './column.service';
 import { CreateColumnDto } from './dto/create-column.dto';
@@ -31,7 +32,7 @@ export class ColumnController {
   @Post()
   createColumn(
     @Body() createColumnDto: CreateColumnDto,
-    @Param('userId') userId: number,
+    @Param('userId', ParseIntPipe) userId: number,
   ) {
     return this.columnService.createColumn(createColumnDto, userId);
   }
@@ -41,7 +42,7 @@ export class ColumnController {
     isArray: true,
   })
   @Get()
-  findAll(@Param('userId') userId: number) {
+  findAll(@Param('userId', ParseIntPipe) userId: number) {
     return this.columnService.findAllColumn(userId);
   }
 
@@ -52,7 +53,7 @@ export class ColumnController {
   })
   @UseGuards(PermissionsGuard)
   @Get(':id')
-  findOneColumn(@Param('id') id: number) {
+  findOneColumn(@Param('id', ParseIntPipe) id: number) {
     return this.columnService.findOneColumn(id);
   }
 
@@ -64,7 +65,7 @@ export class ColumnController {
   @UseGuards(UserGuard, PermissionsGuard)
   @Patch(':id')
   updateColumn(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateColumnDto: UpdateColumnDto,
   ) {
     return this.columnService.updateColumn(id, updateColumnDto);
@@ -77,7 +78,7 @@ export class ColumnController {
   })
   @UseGuards(UserGuard, PermissionsGuard)
   @Delete(':id')
-  removeColumn(@Param('id') id: number) {
+  removeColumn(@Param('id', ParseIntPipe) id: number) {
     return this.columnService.removeColumn(id);
   }
 }

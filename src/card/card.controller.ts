@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
@@ -31,7 +32,7 @@ export class CardController {
   @Post()
   createCard(
     @Body() createCardDto: CreateCardDto,
-    @Param('colomnId') columnId: number,
+    @Param('columnId', ParseIntPipe) columnId: number,
   ) {
     return this.cardService.createCard(createCardDto, columnId);
   }
@@ -41,7 +42,7 @@ export class CardController {
     isArray: true,
   })
   @Get()
-  findAllCards(@Param('columnId') columnId: number) {
+  findAllCards(@Param('columnId', ParseIntPipe) columnId: number) {
     return this.cardService.findAllCards(columnId);
   }
   @ApiOkResponse({
@@ -61,7 +62,10 @@ export class CardController {
   })
   @UseGuards(UserGuard, PermissionsGuard)
   @Patch(':id')
-  updateCard(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
+  updateCard(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateCardDto: UpdateCardDto,
+  ) {
     return this.cardService.updateCard(+id, updateCardDto);
   }
 
@@ -72,7 +76,7 @@ export class CardController {
   })
   @UseGuards(UserGuard, PermissionsGuard)
   @Delete(':id')
-  removeCard(@Param('id') id: string) {
+  removeCard(@Param('id', ParseIntPipe) id: string) {
     return this.cardService.removeCard(+id);
   }
 }
